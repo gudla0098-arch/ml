@@ -1,9 +1,105 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#081321"><meta name="description" content="MediScan AI educational chest X-ray image classification project."><title>MediScan AI — Medical Image Intelligence</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}"></head>
-<body><div class="app-shell"><aside class="sidebar"><a class="brand" href="#"><span class="brand-mark">✚</span><span>MediScan<span class="brand-ai"> AI</span><small>IMAGE INTELLIGENCE</small></span></a><div class="nav-label">WORKSPACE</div><a class="nav-item active" href="#overview">▦ &nbsp; Overview</a><a class="nav-item" href="#analyze">◎ &nbsp; New analysis</a><a class="nav-item" href="#history">◷ &nbsp; Analysis history</a><div class="sidebar-bottom"><div class="secure-card"><span class="secure-icon">⌑</span><b>Privacy first</b><p>Demo processing only. Do not upload identifiable patient data.</p></div><div class="profile"><div class="avatar">MS</div><div><b>Research workspace</b><small>Student project</small></div></div></div></aside>
-<main class="main"><header class="topbar"><div class="crumb">Workspace <span>/</span> <b>Overview</b></div><div class="top-actions"><span class="status"><i></i><span id="model-status">Checking model</span></span><div class="date-label" id="today"></div></div></header>
-<section class="welcome" id="overview"><div><div class="eyebrow"><span class="pulse"></span> MEDICAL IMAGE INTELLIGENCE</div><h1>Good health starts<br>with <em>better insights.</em></h1><p>An educational AI workflow for chest X-ray image classification.</p></div><div class="welcome-art"><div class="scan-ring ring-one"></div><div class="scan-ring ring-two"></div><div class="scan-cross">✚</div><span class="art-label">AI / XRAY</span></div></section>
-<section class="stats-grid"><article class="stat-card"><div class="stat-top">Total analyses <span class="stat-icon blue">▤</span></div><strong id="total-count">—</strong><small>Images processed in this workspace</small></article><article class="stat-card"><div class="stat-top">Normal predictions <span class="stat-icon green">✓</span></div><strong id="normal-count">—</strong><small>Model output · not a clinical result</small></article><article class="stat-card"><div class="stat-top">Pneumonia predictions <span class="stat-icon amber">⌁</span></div><strong id="pneumonia-count">—</strong><small>Model output · requires expert review</small></article><article class="stat-card"><div class="stat-top">AI model <span class="stat-icon violet">✧</span></div><strong class="model-name">MobileNetV2</strong><small>Transfer learning · binary classifier</small></article></section>
-<section class="content-grid"><article class="panel upload-panel" id="analyze"><div class="panel-heading"><div><div class="eyebrow">START A NEW SESSION</div><h2>Analyze an X-ray</h2><p>Upload a chest X-ray image to run the trained model.</p></div><span class="step-tag">01 / INPUT</span></div><form id="upload-form"><label class="dropzone" id="dropzone" for="image-input"><input id="image-input" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" hidden><div class="upload-symbol">↑</div><b>Drop your image here</b><span>or <u>browse files</u> from your device</span><small>PNG or JPG · Maximum 10 MB</small><div class="file-preview" id="file-preview"></div></label><div class="upload-footer"><span><i class="lock-dot"></i> Secure upload · Demo environment</span><button class="primary-btn" id="analyze-btn" type="submit">Run AI analysis ↗</button></div><div class="error-message" id="error-message" role="alert"></div></form></article>
-<article class="panel result-panel"><div class="panel-heading"><div><div class="eyebrow">MODEL RESPONSE</div><h2>Analysis result</h2><p>Your latest prediction will appear here.</p></div><span class="step-tag">02 / OUTPUT</span></div><div class="empty-result" id="empty-result"><div class="empty-graphic"><div class="empty-inner">✧</div></div><b>Ready when you are</b><span>Upload an image to see the model output and confidence score.</span></div><div class="result-content hidden" id="result-content"><div class="result-label">MODEL PREDICTION</div><h3 id="prediction">—</h3><div class="confidence-row"><span>Model confidence</span><b id="confidence">—</b></div><div class="meter"><span id="confidence-bar"></span></div><p class="result-note" id="result-note"></p></div><div class="disclaimer"><span>ⓘ</span><p><b>Important:</b> Academic prototype only. It cannot diagnose disease or replace a radiologist or qualified clinician.</p></div></article></section>
-<section class="panel history-panel" id="history"><div class="history-heading"><div><div class="eyebrow">YOUR WORKSPACE</div><h2>Recent analyses</h2></div><a href="#history" class="view-all">Latest activity ↗</a></div><div class="table-wrap"><table><thead><tr><th>FILE</th><th>MODEL OUTPUT</th><th>CONFIDENCE</th><th>DATE</th><th>STATUS</th></tr></thead><tbody id="history-body"><tr><td colspan="5" class="table-empty">No analyses yet. Your activity will appear here.</td></tr></tbody></table></div></section><footer><span>© 2026 MediScan AI · Academic ML project</span><span>Built for learning, research & responsible AI</span></footer></main></div><script src="{{ url_for('static',filename='app.js') }}"></script></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f5f8fc">
+  <meta name="description" content="MediScan AI — an educational chest X-ray research workspace.">
+  <title>MediScan AI — Research Workspace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="brand" href="#overview" aria-label="MediScan AI home">
+      <span class="brand-mark"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M13 5h6v8h8v6h-8v8h-6v-8H5v-6h8z" fill="currentColor"/></svg></span>
+      <span class="brand-copy">mediscan<span>ai</span><small>IMAGING RESEARCH</small></span>
+    </a>
+    <div class="nav-caption">WORKSPACE</div>
+    <nav class="navigation" aria-label="Main navigation">
+      <a class="nav-item active" href="#overview"><span class="nav-icon">⌂</span>Overview</a>
+      <a class="nav-item" href="#analyze"><span class="nav-icon">＋</span>New analysis</a>
+      <a class="nav-item" href="#history"><span class="nav-icon">◷</span>History</a>
+    </nav>
+    <div class="sidebar-spacer"></div>
+    <div class="privacy-card">
+      <span class="privacy-icon">✳</span>
+      <b>Privacy matters</b>
+      <p>Use sample or de-identified images only. This demo is not for patient care.</p>
+    </div>
+    <div class="sidebar-user"><div class="user-avatar">MS</div><div><b>Research workspace</b><small>Academic project</small></div><span class="user-menu">···</span></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="mobile-brand"><span class="brand-mark small-mark">✚</span><b>mediscan<span>ai</span></b></div>
+      <div class="breadcrumb"><span>Workspace</span><span class="crumb-slash">/</span><b>Overview</b></div>
+      <div class="topbar-right">
+        <div class="system-status"><i></i><span id="model-status">Checking model</span></div>
+        <span class="topbar-divider"></span><span class="today-label" id="today"></span>
+      </div>
+    </header>
+
+    <section class="hero" id="overview">
+      <div class="hero-copy">
+        <div class="hero-kicker"><span class="kicker-line"></span> MEDICAL IMAGE RESEARCH WORKSPACE</div>
+        <h1>Clarity in every<br><span>image.</span> Insight in every step.</h1>
+        <p>Explore an educational AI workflow for chest X-ray image classification, built to make research more approachable.</p>
+        <a class="hero-link" href="#analyze">Start an analysis <span>↗</span></a>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="orbit orbit-a"></div><div class="orbit orbit-b"></div>
+        <div class="xray-card"><div class="xray-top"><span></span><span></span><span></span></div><div class="lungs"><div class="lung left-lung"></div><div class="lung right-lung"></div><div class="spine"></div></div><div class="xray-bottom"><i></i><i></i><i></i></div></div>
+        <div class="scan-chip"><span>✦</span> AI-ASSISTED WORKFLOW</div>
+        <div class="hero-index">01 <span>/</span> 03</div>
+      </div>
+      <div class="hero-decoration">M</div>
+    </section>
+
+    <section class="section-heading metrics-heading"><div><span class="section-kicker">AT A GLANCE</span><h2>Workspace overview</h2></div><span class="live-label"><i></i> LIVE WORKSPACE DATA</span></section>
+    <section class="stats-grid" aria-label="Workspace statistics">
+      <article class="stat-card"><div class="stat-label">Total analyses <span class="metric-icon icon-blue">▤</span></div><div class="stat-value" id="total-count">—</div><div class="stat-foot">Images processed in this workspace</div></article>
+      <article class="stat-card"><div class="stat-label">Normal predictions <span class="metric-icon icon-green">✓</span></div><div class="stat-value" id="normal-count">—</div><div class="stat-foot">Model output · not a clinical result</div></article>
+      <article class="stat-card"><div class="stat-label">Pneumonia predictions <span class="metric-icon icon-orange">⌁</span></div><div class="stat-value" id="pneumonia-count">—</div><div class="stat-foot">Model output · expert review required</div></article>
+      <article class="stat-card model-stat"><div class="stat-label">Model architecture <span class="metric-icon icon-purple">✧</span></div><div class="stat-value model-value">MobileNetV2</div><div class="stat-foot">Transfer learning · binary classifier</div></article>
+    </section>
+
+    <section class="section-heading analysis-heading"><div><span class="section-kicker">IMAGE WORKFLOW</span><h2>Analyze a chest X-ray</h2><p>Upload a supported image and review the model response.</p></div><span class="workflow-count"><span>01</span> INPUT <b>→</b> <span>02</span> RESULT</span></section>
+    <section class="content-grid">
+      <article class="panel upload-panel" id="analyze">
+        <div class="panel-title-row"><div class="panel-title-icon">↑</div><div><h3>Upload image</h3><p>Choose a chest X-ray from your device</p></div><span class="step-number">01</span></div>
+        <form id="upload-form">
+          <label class="dropzone" id="dropzone" for="image-input">
+            <input id="image-input" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" hidden>
+            <span class="upload-cloud"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 26V9m0 0-6 6m6-6 6 6M9 25v7h22v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <b>Drag and drop your image</b><span class="drop-subtitle">or <u>browse files</u> to upload</span>
+            <span class="file-types">PNG or JPG <i>·</i> Maximum file size 10 MB</span>
+            <span class="file-preview" id="file-preview"></span>
+          </label>
+          <div class="upload-meta"><span><i class="tiny-lock">⌑</i> Local demo upload flow</span><span>Accepted: .jpg, .jpeg, .png</span></div>
+          <button class="primary-btn" id="analyze-btn" type="submit"><span>Run AI analysis</span><b>↗</b></button>
+          <div class="error-message" id="error-message" role="alert" aria-live="polite"></div>
+        </form>
+      </article>
+
+      <article class="panel result-panel">
+        <div class="panel-title-row"><div class="panel-title-icon result-icon">✦</div><div><h3>Analysis result</h3><p>Model response and confidence score</p></div><span class="step-number">02</span></div>
+        <div class="empty-result" id="empty-result"><div class="result-placeholder"><div class="placeholder-cross">✚</div><span class="placeholder-dot dot-one"></span><span class="placeholder-dot dot-two"></span></div><b>Your result will appear here</b><span>Upload an image to view the model's output and confidence score.</span></div>
+        <div class="result-content hidden" id="result-content"><div class="result-label">MODEL PREDICTION</div><h3 id="prediction">—</h3><div class="confidence-row"><span>Model confidence</span><b id="confidence">—</b></div><div class="meter"><span id="confidence-bar"></span></div><p class="result-note" id="result-note"></p></div>
+        <div class="result-disclaimer"><span>ⓘ</span><p><b>Research use only.</b> This educational prototype is not clinically validated and cannot diagnose or guide treatment.</p></div>
+      </article>
+    </section>
+
+    <section class="panel history-panel" id="history">
+      <div class="history-header"><div><span class="section-kicker">RECENT ACTIVITY</span><h2>Analysis history</h2><p>Your latest image processing activity appears here.</p></div><span class="history-badge">LAST 6 RECORDS</span></div>
+      <div class="table-wrap"><table><thead><tr><th>IMAGE FILE</th><th>MODEL OUTPUT</th><th>CONFIDENCE</th><th>DATE</th><th>STATUS</th></tr></thead><tbody id="history-body"><tr><td colspan="5" class="table-empty">No analyses yet. Your activity will appear here.</td></tr></tbody></table></div>
+    </section>
+    <footer><span>© 2026 MediScan AI <i>·</i> Academic research prototype</span><span>Designed for learning. Built with responsible AI in mind.</span></footer>
+  </main>
+</div>
+<script src="{{ url_for('static',filename='app.js') }}"></script>
+</body>
+</html>
